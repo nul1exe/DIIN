@@ -12,6 +12,8 @@ import {
   Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 
 export default function RegisterScreen() {
@@ -25,7 +27,7 @@ export default function RegisterScreen() {
   const API_URL =
     Platform.OS === "android"
       ? "http://10.0.2.2:5000/api/auth/register" // Android emulator
-      : "http://192.168.254.109:5000/api/auth/register"; // replace with your PC IPv4 if using phone
+      : "http://192.168.254.108:5000/api/auth/register"; // replace with your PC IPv4 if using phone
 
   const handleRegister = async () => {
     try {
@@ -111,8 +113,10 @@ export default function RegisterScreen() {
           {/* Continue as Guest Button */}
           <TouchableOpacity
             style={styles.guestButton}
-            onPress={() => {
+            onPress={async () => {
               setMessage("Logging in as Guest...");
+              await AsyncStorage.setItem("isGuest", "true"); // store guest flag
+              await AsyncStorage.removeItem("userId"); // ensure no userId is stored
               setTimeout(() => {
                 router.replace("/mobile/home?guest=true");
               }, 1000);

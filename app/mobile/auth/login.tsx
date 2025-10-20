@@ -12,6 +12,8 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -21,7 +23,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.254.109:5000/api/auth/login", {
+      const response = await fetch("http://192.168.254.108:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -32,9 +34,12 @@ export default function LoginScreen() {
       if (response.ok) {
         setMessage("✅ Login successful!");
 
+        // Save user ID for later (to allow feedback)
+        await AsyncStorage.setItem("userId", data.user.id.toString());
+
         // Redirect to home after short delay
         setTimeout(() => {
-          router.replace("/mobile/home"); // 👈 change path if needed
+          router.replace("/mobile/home");
         }, 1500);
       } else {
         setMessage("❌ " + (data.error || "Login failed"));

@@ -8,5 +8,5 @@ export default function Index() {
   }
 
   // Redirect mobile users to mobile home
-  return <Redirect href="/mobile/home" />;
+  return <Redirect href="/mobile/auth/register" />;
 }
